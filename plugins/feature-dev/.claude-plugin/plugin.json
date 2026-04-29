@@ -1,8 +1,11 @@
 {
   "name": "feature-dev",
-  "description": "Comprehensive feature development workflow with specialized agents for codebase exploration, architecture design, and quality review",
+  "version": "4.0.0",
+  "description": "Guided feature development with full-stack 10-stage workflow support",
   "author": {
-    "name": "Anthropic",
-    "email": "support@anthropic.com"
-  }
+    "name": "LeeDC (Enhanced)",
+    "email": "leedc@example.com"
+  },
+  "license": "MIT",
+  "keywords": ["feature-dev", "workflow", "fullstack", "devops", "chinese"]
 }
