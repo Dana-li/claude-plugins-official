@@ -1,125 +1,309 @@
 ---
-description: Guided feature development with codebase understanding and architecture focus
+description: Guided feature development with codebase understanding, architecture focus, and full-stack scenario support
 argument-hint: Optional feature description
 ---
 
-# Feature Development
+# Feature Development (Enhanced)
 
-You are helping a developer implement a new feature. Follow a systematic approach: understand the codebase deeply, identify and ask about all underspecified details, design elegant architectures, then implement.
-
-## Core Principles
-
-- **Ask clarifying questions**: Identify all ambiguities, edge cases, and underspecified behaviors. Ask specific, concrete questions rather than making assumptions. Wait for user answers before proceeding with implementation. Ask questions early (after understanding the codebase, before designing architecture).
-- **Understand before acting**: Read and comprehend existing code patterns first
-- **Read files identified by agents**: When launching agents, ask them to return lists of the most important files to read. After agents complete, read those files to build detailed context before proceeding.
-- **Simple and elegant**: Prioritize readable, maintainable, architecturally sound code
-- **Use TodoWrite**: Track all progress throughout
+> **版本**: v4.0 Enhanced
+> **基础**: 官方 feature-dev v1.0.0
+> **增强**: 全栈场景覆盖 + DevOps 工作流
 
 ---
 
-## Phase 1: Discovery
+## 核心原则
 
-**Goal**: Understand what needs to be built
+- **全栈视角**: 覆盖后端/前端/DevOps/数据库/集成场景
+- **系统性方法**: 理解代码库 → 澄清需求 → 设计架构 → 实现 → 审查 → 总结
+- **并行代理**: 充分利用 code-explorer/architect/reviewer 代理
+- **用户确认**: 每个关键阶段需要明确批准
 
-Initial request: $ARGUMENTS
+---
+
+## Phase 1: Discovery (发现阶段)
+
+**目标**: 理解需要构建什么
 
 **Actions**:
-1. Create todo list with all phases
-2. If feature unclear, ask user for:
-   - What problem are they solving?
-   - What should the feature do?
-   - Any constraints or requirements?
-3. Summarize understanding and confirm with user
+1. 创建包含所有阶段的待办清单
+2. 如果功能不清晰，询问：
+   - 要解决什么问题？
+   - 功能应该做什么？
+   - 有哪些约束或要求？
+3. 总结理解并与用户确认
+
+**场景识别**:
+根据触发词判断场景类型：
+
+| 触发词 | 场景 | 推荐模型 |
+|--------|------|----------|
+| 开发、实现、添加 | 后端开发 | Sonnet 4 |
+| 页面、组件、界面 | 前端开发 | Sonnet 4 |
+| 迁移、变更表 | 数据库操作 | Sonnet 4 |
+| 对接、集成、接入 | API 集成 | Sonnet 4 |
+| 部署、上线、发布 | DevOps | Sonnet 4 |
+| 生产、消费、订阅 | 消息队列 | Sonnet 4 |
+| 缓存、优化 | 缓存策略 | Sonnet 4 |
+| 优化、调优 | 性能优化 | Opus 4 |
+| 安全、漏洞 | 安全审计 | Opus 4 |
 
 ---
 
-## Phase 2: Codebase Exploration
+## Phase 2: Codebase Exploration (代码库探索)
 
-**Goal**: Understand relevant existing code and patterns at both high and low levels
+**目标**: 理解相关现有代码和模式
 
 **Actions**:
-1. Launch 2-3 code-explorer agents in parallel. Each agent should:
-   - Trace through the code comprehensively and focus on getting a comprehensive understanding of abstractions, architecture and flow of control
-   - Target a different aspect of the codebase (eg. similar features, high level understanding, architectural understanding, user experience, etc)
-   - Include a list of 5-10 key files to read
+1. **并行启动 2-3 个 code-explorer 代理**，每个代理：
+   - 全面追踪代码，理解抽象、架构和控制流
+   - 针对不同方面（类似功能、高层理解、架构理解、用户体验等）
+   - 返回 5-10 个关键文件列表
 
-   **Example agent prompts**:
-   - "Find features similar to [feature] and trace through their implementation comprehensively"
-   - "Map the architecture and abstractions for [feature area], tracing through the code comprehensively"
-   - "Analyze the current implementation of [existing feature/area], tracing through the code comprehensively"
-   - "Identify UI patterns, testing approaches, or extension points relevant to [feature]"
+   **Agent 提示示例**:
+   - "查找与 [功能] 相似的功能并全面追踪其实现"
+   - "映射 [功能领域] 的架构和抽象，全面追踪代码"
+   - "分析 [现有功能/领域] 的当前实现，全面追踪代码"
+   - "识别与 [功能] 相关的 UI 模式、测试方法或扩展点"
 
-2. Once the agents return, please read all files identified by agents to build deep understanding
-3. Present comprehensive summary of findings and patterns discovered
+2. 代理返回后，读取代理识别的所有文件以构建深度理解
+3. 呈现发现的综合摘要
 
 ---
 
-## Phase 3: Clarifying Questions
+## Phase 3: Clarifying Questions (澄清问题)
 
-**Goal**: Fill in gaps and resolve all ambiguities before designing
+**目标**: 填补空白并解决所有歧义
 
-**CRITICAL**: This is one of the most important phases. DO NOT SKIP.
+**CRITICAL**: 这是最重要的阶段之一。不要跳过。
 
 **Actions**:
-1. Review the codebase findings and original feature request
-2. Identify underspecified aspects: edge cases, error handling, integration points, scope boundaries, design preferences, backward compatibility, performance needs
-3. **Present all questions to the user in a clear, organized list**
-4. **Wait for answers before proceeding to architecture design**
+1. 审查代码库发现和原始功能请求
+2. 识别未明确指定的方面：
+   - **边界情况**: 异常输入、空数据、大数据量
+   - **错误处理**: 异常场景、重试机制、降级策略
+   - **集成点**: 内部服务、外部 API、消息队列
+   - **范围边界**: 包含什么、不包含什么
+   - **向后兼容性**: 对现有功能的影响
+   - **性能需求**: QPS、延迟、并发
+   - **安全要求**: 权限、数据加密、审计日志
+3. **以清晰、有组织的列表向用户呈现所有问题**
+4. **等待回答后再继续架构设计**
 
-If the user says "whatever you think is best", provide your recommendation and get explicit confirmation.
+如果用户说"你认为最好的"，提供推荐并获得明确确认。
 
 ---
 
-## Phase 4: Architecture Design
+## Phase 4: Architecture Design (架构设计)
 
-**Goal**: Design multiple implementation approaches with different trade-offs
+**目标**: 设计多种实现方案
 
 **Actions**:
-1. Launch 2-3 code-architect agents in parallel with different focuses: minimal changes (smallest change, maximum reuse), clean architecture (maintainability, elegant abstractions), or pragmatic balance (speed + quality)
-2. Review all approaches and form your opinion on which fits best for this specific task (consider: small fix vs large feature, urgency, complexity, team context)
-3. Present to user: brief summary of each approach, trade-offs comparison, **your recommendation with reasoning**, concrete implementation differences
-4. **Ask user which approach they prefer**
+1. **并行启动 2-3 个 code-architect 代理**，具有不同侧重点：
+   - **最小变更**: 最小改动、最大复用
+   - **清晰架构**: 可维护性、优雅抽象
+   - **务实平衡**: 速度 + 质量
+
+2. 审查所有方法并形成意见（考虑：小修复 vs 大功能、紧急程度、复杂性、团队上下文）
+3. 向用户呈现：
+   - 每种方法的简要摘要
+   - 权衡比较
+   - **你的推荐及理由**
+   - 具体实现差异
+4. **询问用户偏好哪种方法**
+
+**全栈场景设计要点**:
+
+| 场景 | 设计要点 |
+|------|----------|
+| 后端开发 | 分层架构、事务边界、缓存策略 |
+| 前端开发 | 组件设计、状态管理、路由设计 |
+| 数据库操作 | 索引设计、迁移策略、回滚方案 |
+| API 集成 | 契约设计、熔断降级、超时配置 |
+| DevOps | 部署策略、配置管理、监控告警 |
+| 消息队列 | 幂等性、死信队列、顺序保证 |
+| 缓存策略 | 缓存键、雪崩穿透、过期策略 |
+| 安全审计 | 权限模型、数据脱敏、审计日志 |
 
 ---
 
-## Phase 5: Implementation
+## Phase 5: Implementation (实现)
 
-**Goal**: Build the feature
+**目标**: 构建功能
 
 **DO NOT START WITHOUT USER APPROVAL**
 
 **Actions**:
-1. Wait for explicit user approval
-2. Read all relevant files identified in previous phases
-3. Implement following chosen architecture
-4. Follow codebase conventions strictly
-5. Write clean, well-documented code
-6. Update todos as you progress
+1. 等待明确批准
+2. 读取前几个阶段识别的所有相关文件
+3. 按照选定的架构实现
+4. 严格遵循代码库约定
+5. 编写清晰、有文档的代码
+6. 随进度更新待办事项
+
+**实现检查清单**:
+
+| 检查项 | 标准 |
+|--------|------|
+| 代码风格 | 项目规范（格式化/Lint） |
+| 单元测试 | 覆盖率 > 70%（核心逻辑） |
+| 异常处理 | 全局异常处理 |
+| 日志规范 | 级别/格式/脱敏 |
+| API 文档 | Swagger/OpenAPI 更新 |
+| 安全检查 | 敏感信息不硬编码 |
 
 ---
 
-## Phase 6: Quality Review
+## Phase 6: Quality Review (质量审查)
 
-**Goal**: Ensure code is simple, DRY, elegant, easy to read, and functionally correct
+**目标**: 确保代码简洁、DRY、优雅且功能正确
 
 **Actions**:
-1. Launch 3 code-reviewer agents in parallel with different focuses: simplicity/DRY/elegance, bugs/functional correctness, project conventions/abstractions
-2. Consolidate findings and identify highest severity issues that you recommend fixing
-3. **Present findings to user and ask what they want to do** (fix now, fix later, or proceed as-is)
-4. Address issues based on user decision
+1. **并行启动 3 个 code-reviewer 代理**，具有不同侧重点：
+   - **简洁性/DRY/优雅性**: 代码质量和可维护性
+   - **Bug/正确性**: 功能正确性和逻辑错误
+   - **约定/抽象**: 项目标准和模式
+
+2. 整合发现并识别建议修复的最高优先级问题
+3. **向用户呈现发现并询问想要做什么**：
+   - 现在修复
+   - 稍后修复
+   - 按原样继续
+4. 根据用户决定处理问题
+
+**审查范围**:
+
+| 类型 | 检查项 |
+|------|--------|
+| 代码质量 | DRY、可读性、命名规范 |
+| Bug 检测 | 空指针、边界条件、并发安全 |
+| 安全审计 | SQL注入、XSS、权限校验 |
+| 性能 | N+1 查询、缓存命中率 |
+| 测试 | 覆盖率、边界测试 |
 
 ---
 
-## Phase 7: Summary
+## Phase 7: Summary (总结)
 
-**Goal**: Document what was accomplished
+**目标**: 记录完成的工作
 
 **Actions**:
-1. Mark all todos complete
-2. Summarize:
-   - What was built
-   - Key decisions made
-   - Files modified
-   - Suggested next steps
+1. 标记所有待办事项完成
+2. 总结：
+   - 构建了什么
+   - 做出的关键决策
+   - 修改的文件
+   - 建议的后续步骤
+3. 更新文档（API 文档、变更日志）
 
 ---
+
+## ⭐ Phase 8: Integration (集成) [增强]
+
+**目标**: 跨域集成验证
+
+**Actions**:
+1. **API 集成**:
+   - 接口契约验证
+   - 熔断降级测试
+   - 超时配置确认
+
+2. **消息队列**:
+   - 消息发送/消费验证
+   - 幂等性确认
+   - 死信队列配置
+
+3. **缓存验证**:
+   - 缓存命中测试
+   - 过期策略验证
+   - 雪崩防护确认
+
+---
+
+## ⭐ Phase 9: Deployment (部署) [增强]
+
+**目标**: 安全部署上线
+
+**Actions**:
+1. **部署前检查**:
+   - 备份当前版本
+   - 确认回滚方案
+   - 配置变更同步
+
+2. **灰度发布**:
+   - 10% 流量观察
+   - 50% 流量验证
+   - 100% 全量切换
+
+3. **上线后验证**:
+   - 功能验证
+   - 监控指标确认
+   - 日志检查
+
+**部署检查清单**:
+
+| 检查项 | 状态 |
+|--------|------|
+| 备份完成 | ☐ |
+| 回滚方案就绪 | ☐ |
+| 配置同步 | ☐ |
+| 监控仪表盘 | ☐ |
+| 值班通知 | ☐ |
+
+---
+
+## ⭐ Phase 10: Hotfix (热修复) [增强]
+
+**目标**: 快速修复生产问题
+
+**Actions**:
+1. **问题定位**:
+   - 日志分析
+   - 监控指标
+   - 用户反馈
+
+2. **快速修复**:
+   - 最小改动原则
+   - 优先回滚而非修复
+   - 紧急 PR
+
+3. **验证发布**:
+   - 功能验证
+   - 监控确认
+   - 事后复盘
+
+---
+
+## 与 Skills 生态集成
+
+| 阶段 | Skills | 用途 |
+|------|--------|------|
+| Phase 1 | requirement-analyzer | 需求分析 |
+| Phase 3 | spec | 结构化规范 |
+| Phase 4 | design-generator | 技术设计生成 |
+| Phase 4 | design-reviewer | 设计评审 |
+| Phase 6 | code-reviewer | 代码审查 |
+| Phase 6 | spring-boot-reviewer | Java 专项审查 |
+| Phase 6 | vue-reviewer | Vue 专项审查 |
+| Phase 6 | test-gen | 测试生成 |
+| Phase 6 | playwright-skill | E2E 测试 |
+| Phase 9 | bug-analyzer | Bug 分析 |
+
+---
+
+## Token 预算控制
+
+| 阶段 | 平均消耗 | 最大消耗 |
+|-------|----------|----------|
+| Phase 1-3 | 5K | 10K |
+| Phase 4 | 8K | 15K |
+| Phase 5 | 20K | 50K |
+| Phase 6 | 10K | 20K |
+| Phase 7 | 2K | 5K |
+| Phase 8-9 | 10K | 25K |
+| **总计** | **55K** | **125K** |
+
+---
+
+**版本**: v4.0 Enhanced
+**基础**: 官方 feature-dev v1.0.0
+**增强日期**: 2026-04-29
